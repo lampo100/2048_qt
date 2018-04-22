@@ -22,6 +22,9 @@
     <height>480</height>
    </size>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -68,12 +71,18 @@
         <height>120</height>
        </size>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
      </widget>
     </item>
     <item>
      <widget class="QGraphicsView" name="tilesGraphicsView">
       <property name="enabled">
        <bool>true</bool>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
      </widget>
     </item>

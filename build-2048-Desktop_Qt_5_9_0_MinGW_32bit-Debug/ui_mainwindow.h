@@ -36,6 +36,7 @@ public:
         MainWindow->resize(400, 480);
         MainWindow->setMinimumSize(QSize(400, 480));
         MainWindow->setMaximumSize(QSize(400, 480));
+        MainWindow->setFocusPolicy(Qt::StrongFocus);
         MainWindow->setWindowOpacity(1);
         MainWindow->setAutoFillBackground(true);
         centralWidget = new QWidget(MainWindow);
@@ -54,12 +55,14 @@ public:
         sizePolicy.setHeightForWidth(labelsGraphicsView->sizePolicy().hasHeightForWidth());
         labelsGraphicsView->setSizePolicy(sizePolicy);
         labelsGraphicsView->setMinimumSize(QSize(400, 120));
+        labelsGraphicsView->setFocusPolicy(Qt::NoFocus);
 
         verticalLayout->addWidget(labelsGraphicsView);
 
         tilesGraphicsView = new QGraphicsView(centralWidget);
         tilesGraphicsView->setObjectName(QStringLiteral("tilesGraphicsView"));
         tilesGraphicsView->setEnabled(true);
+        tilesGraphicsView->setFocusPolicy(Qt::NoFocus);
 
         verticalLayout->addWidget(tilesGraphicsView);
 

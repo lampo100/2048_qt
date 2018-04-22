@@ -7,6 +7,8 @@
 #include "grid.h"
 #include "tile.h"
 #include <QGraphicsSimpleTextItem>
+#include <QKeyEvent>
+#include <QSequentialAnimationGroup>
 
 namespace Ui {
 class MainWindow;
@@ -19,6 +21,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+public slots:
+    void spawnNewTile();
 
 private:
     void prepareViews();

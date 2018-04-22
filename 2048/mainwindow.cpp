@@ -89,7 +89,7 @@ void MainWindow::prepareScore()
     scoreText->setFont(QFont("Times", 12));
     scoreText->setPos(scoreRect->rect().width()/4, scoreRect->rect().height()/9);
 
-    auto score = new QGraphicsSimpleTextItem("1024", scoreRect);
+    auto score = new QGraphicsSimpleTextItem("0", scoreRect);
     this->score = score;
     score->setBrush(QBrush(QColor(255, 255, 255)));
     pen.setColor(QColor(255, 255, 255));
@@ -109,15 +109,15 @@ void MainWindow::prepareHighScore()
     scoreRect->setBrush(QBrush(QColor(187, 173, 160)));
     scoreRect->setPen(QPen(QColor(187, 173, 160)));
 
-    auto scoreText = new QGraphicsSimpleTextItem("Score", scoreRect);
+    auto scoreText = new QGraphicsSimpleTextItem("High Score", scoreRect);
     scoreText->setBrush(QBrush(QColor(237, 228, 213)));
     QPen pen;
     pen.setColor(QColor(237, 228, 213));
     scoreText->setPen(pen);
     scoreText->setFont(QFont("Times", 12));
-    scoreText->setPos(scoreRect->rect().width()/4, scoreRect->rect().height()/9);
+    scoreText->setPos(scoreRect->rect().width()/9, scoreRect->rect().height()/9);
 
-    auto score = new QGraphicsSimpleTextItem("1024", scoreRect);
+    auto score = new QGraphicsSimpleTextItem("0", scoreRect);
     this->score = score;
     score->setBrush(QBrush(QColor(255, 255, 255)));
     pen.setColor(QColor(255, 255, 255));
@@ -132,16 +132,25 @@ void MainWindow::prepareHighScore()
 
 void MainWindow::prepareGrid()
 {
+    spawnNewTile();
+    spawnNewTile();
+}
 
+void MainWindow::spawnNewTile()
+{
     Tile * newTile = this->tilesGrid.spawnTile();
+    if(newTile == nullptr)
+        return;
     auto newRect = prepareNewRect(newTile->row, newTile->col, newTile->getScore());
     newTile->attachRect(newRect);
     this->tilesScene->addItem(newRect);
 
-    newTile = this->tilesGrid.spawnTile();
-    newRect = prepareNewRect(newTile->row, newTile->col, newTile->getScore());
-    newTile->attachRect(newRect);
-    this->tilesScene->addItem(newRect);
+    QPropertyAnimation *anim = new QPropertyAnimation(newRect, "scale");
+    newRect->setTransformOriginPoint(newRect->rect().width()/2, newRect->rect().height()/2);
+    anim->setStartValue(0);
+    anim->setEndValue(1);
+    anim->setDuration(100);
+    anim->start();
 }
 
 RoundedRectangle *MainWindow::prepareNewRect(int row, int col, int score)
@@ -154,10 +163,25 @@ RoundedRectangle *MainWindow::prepareNewRect(int row, int col, int score)
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
+    QSequentialAnimationGroup *animations;
+    if(event->key() == Qt::Key_Left){
+        animations = this->tilesGrid.left();
+    }else if(event->key() == Qt::Key_Right){
+        animations = this->tilesGrid.right();
+    }else if(event->key() == Qt::Key_Up){
+        animations = this->tilesGrid.up();
+    }else if(event->key() == Qt::Key_Down){
+        animations = this->tilesGrid.down();
+    }else
+        return;
 
+    QObject::connect(animations, SIGNAL(finished()), this, SLOT(spawnNewTile()));
+    animations->start();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+
