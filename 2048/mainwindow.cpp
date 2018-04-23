@@ -118,7 +118,7 @@ void MainWindow::prepareHighScore()
     scoreText->setPos(scoreRect->rect().width()/9, scoreRect->rect().height()/9);
 
     auto score = new QGraphicsSimpleTextItem("0", scoreRect);
-    this->score = score;
+    this->highScore = score;
     score->setBrush(QBrush(QColor(255, 255, 255)));
     pen.setColor(QColor(255, 255, 255));
     score->setPen(pen);
@@ -151,6 +151,8 @@ void MainWindow::spawnNewTile()
     anim->setEndValue(1);
     anim->setDuration(100);
     anim->start();
+    this->score->setText(QString::number(this->tilesGrid.score));
+
 }
 
 RoundedRectangle *MainWindow::prepareNewRect(int row, int col, int score)
@@ -172,9 +174,19 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         animations = this->tilesGrid.up();
     }else if(event->key() == Qt::Key_Down){
         animations = this->tilesGrid.down();
+    }else if(event->key() == Qt::Key_R){
+        if(this->score->text().toInt() > this->highScore->text().toInt())
+            this->highScore->setText(this->score->text());
+        this->score->setText("0");
+        tilesScene = new QGraphicsScene(this);
+        tilesScene->setSceneRect(0, 0, 400, 360);
+        ui->tilesGraphicsView->setScene(tilesScene);
+        this->tilesGrid = Grid();
+        paintBoard();
+        prepareGrid();
+        return;
     }else
         return;
-
     QObject::connect(animations, SIGNAL(finished()), this, SLOT(spawnNewTile()));
     animations->start();
 }

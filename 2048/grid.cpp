@@ -30,7 +30,6 @@ Tile* Grid::spawnTile()
         score = 2;
     else
         score = 4;
-    score = 4;
     this->grid.at(row)->at(col)->setScore(score);
     this->grid.at(row)->at(col)->setCoords(row, col);
     this->grid.at(row)->at(col)->setInGame(true);
@@ -290,6 +289,7 @@ QPropertyAnimation* Grid::combineTiles(Tile *dest, Tile *source, char side)
 
     dest->rect = source->rect;
     dest->setScore(source->getScore()*2);
+    this->score += dest->getScore();
     source->setInGame(false);
     source->rect = nullptr;
     this->tilesInGameCount--;

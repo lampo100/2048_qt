@@ -17,7 +17,7 @@ public:
     QSequentialAnimationGroup *left();
     QSequentialAnimationGroup *right();
 
-
+    qint16 score = 0;
 private:
     QPropertyAnimation *combineTiles(Tile *, Tile *, char);
     QPropertyAnimation *moveTile(Tile *, Tile *);
